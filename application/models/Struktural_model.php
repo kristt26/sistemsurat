@@ -34,7 +34,8 @@ class Struktural_model extends CI_Model
     function add_struktural($params)
     {
         $this->db->insert('struktural',$params);
-        return $this->db->insert_id();
+        $params['idstruktural'] = $this->db->insert_id();
+        return $params;
     }
     
     /*
