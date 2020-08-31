@@ -1,29 +1,50 @@
-<div class="row" ng-controller="KriteriaController">
-    <div class="col-md-12">
-        <div class="box">
+<div class="row col-md-12" ng-controller="KriteriaController">
+    <div class="col-md-4">
+        <div class="tile">
             <div class="box-header">
-                <h3 class="box-title">Kriteria Listing</h3>
-            	<div class="box-tools">
-                    <a href="<?php echo site_url('kriterium/add'); ?>" class="btn btn-success btn-sm">Add</a> 
-                </div>
+                <h5 class="box-title">Form Kriteria</h5>
+                <div class="clearfix"></div>
+                <hr>
             </div>
             <div class="box-body">
-                <table class="table table-striped">
+                <form ng-submit="simpan()">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Kriteria</label>
+                            <input class="form-control" type="text" ng-model="model.kriteria" placeholder="Nama Kriteria" required>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </form>     
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="tile">
+            <div class="box-header">
+                <h5 class="box-title">Data Kriteria</h5>
+                <div class="clearfix"></div>
+                <hr>
+            </div>
+            <div class="box-body">
+                <table class="table table-hover">
                     <tr>
-						<th>Idkriteria</th>
+						<th style="width:10%">No</th>
 						<th>Kriteria</th>
-						<th>Actions</th>
+						<th style="width:20%">Actions</th>
                     </tr>
-                    <?php foreach($kriteria as $k){ ?>
-                    <tr>
-						<td><?php echo $k['idkriteria']; ?></td>
-						<td><?php echo $k['kriteria']; ?></td>
+                    <tr ng-repeat="item in datas">
+						<td>{{$inded+1}}</td>
+						<td>{{item.kriteria}}</td>
 						<td>
-                            <a href="<?php echo site_url('kriterium/edit/'.$k['idkriteria']); ?>" class="btn btn-info btn-xs"><span class="fa fa-pencil"></span> Edit</a> 
-                            <a href="<?php echo site_url('kriterium/remove/'.$k['idkriteria']); ?>" class="btn btn-danger btn-xs"><span class="fa fa-trash"></span> Delete</a>
+                            <button type="button" class="btn btn-info btn-xs" ng-click="edit(item)"><i class="fa fa-pencil"></i></button> 
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="hapus(item)"><i class="fa fa-trash"></i></button>
+                            <button type="button" class="btn btn-primary btn-xs" ng-click="addkategori(item)"><i class="fa fa-plus"></i></button>
                         </td>
                     </tr>
-                    <?php } ?>
                 </table>
                                 
             </div>

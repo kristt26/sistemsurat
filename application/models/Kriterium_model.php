@@ -34,7 +34,8 @@ class Kriterium_model extends CI_Model
     function add_kriterium($params)
     {
         $this->db->insert('kriteria',$params);
-        return $this->db->insert_id();
+        $params['idkriteria'] = $this->db->insert_id();
+        return $params;
     }
     
     /*

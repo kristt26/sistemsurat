@@ -14,9 +14,15 @@ class Kategorisurat_model extends CI_Model
     /*
      * Get kategorisurat by idkategori_surat
      */
-    function get_kategorisurat($idkategori_surat)
+    function get_kategorisurat($idkriteria)
     {
-        return $this->db->get_where('kategorisurat',array('idkategori_surat'=>$idkategori_surat))->row_array();
+        return $this->db->query("SELECT
+            `kategorisurat`.*,
+            `kriteria`.`kriteria`
+        FROM
+            `kategorisurat`
+            LEFT JOIN `kriteria` ON `kategorisurat`.`idkriteria` = `kriteria`.`idkriteria`
+        WHERE `kriteria`.`idkriteria`='$idkriteria'")->result_array();
     }
         
     /*
@@ -34,7 +40,8 @@ class Kategorisurat_model extends CI_Model
     function add_kategorisurat($params)
     {
         $this->db->insert('kategorisurat',$params);
-        return $this->db->insert_id();
+        $params['idkategori_surat']= $this->db->insert_id();
+        return $params;
     }
     
     /*

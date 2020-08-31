@@ -16,10 +16,16 @@ class Kriterium extends CI_Controller{
      */
     function index()
     {
-        $data['kriteria'] = $this->Kriterium_model->get_all_kriteria();
+        
         
         $data['_view'] = 'kriterium/index';
         $this->load->view('layouts/main',$data);
+    }
+
+    public function getdata()
+    {
+        $data = $this->Kriterium_model->get_all_kriteria();
+        echo json_encode($data);
     }
 
     /*
@@ -27,19 +33,13 @@ class Kriterium extends CI_Controller{
      */
     function add()
     {   
-        if(isset($_POST) && count($_POST) > 0)     
-        {   
-            $params = array(
-				'kriteria' => $this->input->post('kriteria'),
-            );
-            
-            $kriterium_id = $this->Kriterium_model->add_kriterium($params);
-            redirect('kriterium/index');
-        }
-        else
-        {            
-            $data['_view'] = 'kriterium/add';
-            $this->load->view('layouts/main',$data);
+        $params = json_decode($this->security->xss_clean($this->input->raw_input_stream), true);
+        if(!isset($params['idkriteria'])){
+            $result = $this->Kriterium_model->add_kriterium($params);
+            echo json_encode($result);
+        }else{
+            $result = $this->Kriterium_model->update_kriterium($params['idkriteria'],$params);
+            echo json_encode($result);
         }
     }  
 
@@ -83,10 +83,13 @@ class Kriterium extends CI_Controller{
         if(isset($kriterium['idkriteria']))
         {
             $this->Kriterium_model->delete_kriterium($idkriteria);
-            redirect('kriterium/index');
+            echo json_encode(['message'=>'berhasil']);
+
         }
         else
-            show_error('The kriterium you are trying to delete does not exist.');
+            var_dump(http_response_code(400));
+            echo json_encode(['message'=>'tidak ada data']);
+
     }
     
 }

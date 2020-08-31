@@ -14,12 +14,18 @@ class Kategorisurat extends CI_Controller{
     /*
      * Listing of kategorisurat
      */
-    function index()
+    function index($idkriteria=null)
     {
-        $data['kategorisurat'] = $this->Kategorisurat_model->get_all_kategorisurat();
-        
         $data['_view'] = 'kategorisurat/index';
         $this->load->view('layouts/main',$data);
+    }
+
+    public function getdata($idkriteria = null)
+    {
+        $this->load->model('Kriterium_model');
+        $data['kriterium'] = $this->Kriterium_model->get_kriterium($idkriteria);
+        $data['kategorisurat'] = $this->Kategorisurat_model->get_kategorisurat($idkriteria);
+        echo json_encode($data);
     }
 
     /*
@@ -27,22 +33,16 @@ class Kategorisurat extends CI_Controller{
      */
     function add()
     {   
-        if(isset($_POST) && count($_POST) > 0)     
+        $params = json_decode($this->security->xss_clean($this->input->raw_input_stream), true);
+        if(!isset($params['idkategori_surat']))     
         {   
-            $params = array(
-				'nama_kategori' => $this->input->post('nama_kategori'),
-				'keterangan' => $this->input->post('keterangan'),
-				'idkriteria' => $this->input->post('idkriteria'),
-            );
-            
-            $kategorisurat_id = $this->Kategorisurat_model->add_kategorisurat($params);
-            redirect('kategorisurat/index');
+            $result = $this->Kategorisurat_model->add_kategorisurat($params);
+            echo json_encode($result);
+        }else{
+            $this->Kategorisurat_model->update_kategorisurat($params['idkategori_surat'],$params);
+            echo json_encode($result);
         }
-        else
-        {            
-            $data['_view'] = 'kategorisurat/add';
-            $this->load->view('layouts/main',$data);
-        }
+        
     }  
 
     /*
@@ -84,13 +84,15 @@ class Kategorisurat extends CI_Controller{
         $kategorisurat = $this->Kategorisurat_model->get_kategorisurat($idkategori_surat);
 
         // check if the kategorisurat exists before trying to delete it
-        if(isset($kategorisurat['idkategori_surat']))
+        if(isset($idkategori_surat))
         {
             $this->Kategorisurat_model->delete_kategorisurat($idkategori_surat);
-            redirect('kategorisurat/index');
+            echo json_encode(['message'=>'berhasil']);
         }
-        else
-            show_error('The kategorisurat you are trying to delete does not exist.');
+        else{
+            var_dump(http_response_code(400));
+            echo json_encode(['message'=>'tidak ada data']);;
+        }
     }
     
 }

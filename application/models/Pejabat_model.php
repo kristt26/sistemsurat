@@ -24,8 +24,16 @@ class Pejabat_model extends CI_Model
      */
     function get_all_pejabat()
     {
-        $this->db->order_by('idpejabat', 'desc');
-        return $this->db->get('pejabat')->result_array();
+        $result = $this->db->query("SELECT
+            `pejabat`.*,
+            `struktural`.`nm_struktural`,
+            `pegawai`.`Nama`
+        FROM
+            `pejabat`
+            LEFT JOIN `pegawai` ON `pejabat`.`idpegawai` = `pegawai`.`idpegawai`
+            LEFT JOIN `struktural` ON `struktural`.`idstruktural` =
+            `pejabat`.`idstruktural`")->result_array();
+        return $result;
     }
         
     /*
@@ -33,8 +41,29 @@ class Pejabat_model extends CI_Model
      */
     function add_pejabat($params)
     {
+        $this->db->trans_begin();
+        $this->db->where('idstruktural',$params['idstruktural']);
+        $this->db->update('pejabat', ['status'=>false]); 
         $this->db->insert('pejabat',$params);
-        return $this->db->insert_id();
+        $id = $this->db->insert_id();
+        
+        if($this->db->trans_status()){
+            $this->db->trans_commit();
+            $result = $this->db->query("SELECT
+                `pejabat`.*,
+                `struktural`.`nm_struktural`,
+                `pegawai`.`Nama`
+            FROM
+                `pejabat`
+                LEFT JOIN `pegawai` ON `pejabat`.`idpegawai` = `pegawai`.`idpegawai`
+                LEFT JOIN `struktural` ON `struktural`.`idstruktural` =
+                `pejabat`.`idstruktural`
+            WHERE pejabat.idpejabat= '$id'")->row_array();
+            return $result;
+        }else{
+            $this->db->trans_rollback();
+            return $this->db->trans_status();
+        }
     }
     
     /*
@@ -42,8 +71,25 @@ class Pejabat_model extends CI_Model
      */
     function update_pejabat($idpejabat,$params)
     {
+        $item = [
+            'idstruktural'=>$params['idstruktural'],
+            'status'=>$params['status'],
+            'NoSK'=>$params['NoSK'],
+            'idpegawai'=>$params['idpegawai']
+        ];
         $this->db->where('idpejabat',$idpejabat);
-        return $this->db->update('pejabat',$params);
+        $this->db->update('pejabat',$params);
+        $result = $this->db->query("SELECT
+            `pejabat`.*,
+            `struktural`.`nm_struktural`,
+            `pegawai`.`Nama`
+        FROM
+            `pejabat`
+            LEFT JOIN `pegawai` ON `pejabat`.`idpegawai` = `pegawai`.`idpegawai`
+            LEFT JOIN `struktural` ON `struktural`.`idstruktural` =
+            `pejabat`.`idstruktural`
+        WHERE pejabat.idpejabat= '$idpejabat'")->row_array();
+        return $result;
     }
     
     /*

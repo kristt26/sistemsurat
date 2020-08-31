@@ -16,32 +16,25 @@ class Pejabat extends CI_Controller{
      */
     function index()
     {
-        $data['pejabat'] = $this->Pejabat_model->get_all_pejabat();
-        
         $data['_view'] = 'pejabat/index';
         $this->load->view('layouts/main',$data);
     }
 
-    /*
-     * Adding a new pejabat
-     */
+    public function getdata()
+    {
+        $data = $this->Pejabat_model->get_all_pejabat();
+        echo json_encode($data);
+    }
+
     function add()
     {   
-        if(isset($_POST) && count($_POST) > 0)     
+        $params = json_decode($this->security->xss_clean($this->input->raw_input_stream), true);
+        if(!isset($params['idpejabat']))     
         {   
-            $params = array(
-				'idstruktural' => $this->input->post('idstruktural'),
-				'status' => $this->input->post('status'),
-				'idpegawai' => $this->input->post('idpegawai'),
-            );
-            
-            $pejabat_id = $this->Pejabat_model->add_pejabat($params);
-            redirect('pejabat/index');
-        }
-        else
-        {            
-            $data['_view'] = 'pejabat/add';
-            $this->load->view('layouts/main',$data);
+            $result = $this->Pejabat_model->add_pejabat($params);
+            echo json_encode($result);
+        }else{
+            $this->Pejabat_model->update_pejabat($params['idpejabat'],$params);
         }
     }  
 

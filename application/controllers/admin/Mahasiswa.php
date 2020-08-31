@@ -16,135 +16,25 @@ class Mahasiswa extends CI_Controller{
      */
     function index()
     {
-        $data['mahasiswa'] = $this->Mahasiswa_model->get_all_mahasiswa();
-        
         $data['_view'] = 'mahasiswa/index';
         $this->load->view('layouts/main',$data);
     }
 
-    /*
-     * Adding a new mahasiswa
-     */
-    function add()
-    {   
-        if(isset($_POST) && count($_POST) > 0)     
-        {   
-            $params = array(
-				'npm' => $this->input->post('npm'),
-				'kdps' => $this->input->post('kdps'),
-				'jenjang' => $this->input->post('jenjang'),
-				'kelas' => $this->input->post('kelas'),
-				'nmmhs' => $this->input->post('nmmhs'),
-				'tmlhr' => $this->input->post('tmlhr'),
-				'tglhr' => $this->input->post('tglhr'),
-				'jk' => $this->input->post('jk'),
-				'agama' => $this->input->post('agama'),
-				'kewarga' => $this->input->post('kewarga'),
-				'pendidikan' => $this->input->post('pendidikan'),
-				'nmsmu' => $this->input->post('nmsmu'),
-				'jursmu' => $this->input->post('jursmu'),
-				'kotasmu' => $this->input->post('kotasmu'),
-				'kabsmu' => $this->input->post('kabsmu'),
-				'provsmu' => $this->input->post('provsmu'),
-				'pekerjaan' => $this->input->post('pekerjaan'),
-				'almt' => $this->input->post('almt'),
-				'notlp' => $this->input->post('notlp'),
-				'status' => $this->input->post('status'),
-				'jmsaudara' => $this->input->post('jmsaudara'),
-				'nmayah' => $this->input->post('nmayah'),
-				'almtayah' => $this->input->post('almtayah'),
-				'nmibu' => $this->input->post('nmibu'),
-				'sumbiaya' => $this->input->post('sumbiaya'),
-				'statuskul' => $this->input->post('statuskul'),
-				'tgdaftar' => $this->input->post('tgdaftar'),
-				'kurikulum' => $this->input->post('kurikulum'),
-				'IdUser' => $this->input->post('IdUser'),
-				'photo' => $this->input->post('photo'),
-            );
-            
-            $mahasiswa_id = $this->Mahasiswa_model->add_mahasiswa($params);
-            redirect('mahasiswa/index');
-        }
-        else
-        {            
-            $data['_view'] = 'mahasiswa/add';
-            $this->load->view('layouts/main',$data);
-        }
-    }  
-
-    /*
-     * Editing a mahasiswa
-     */
-    function edit($Id)
-    {   
-        // check if the mahasiswa exists before trying to edit it
-        $data['mahasiswa'] = $this->Mahasiswa_model->get_mahasiswa($Id);
-        
-        if(isset($data['mahasiswa']['Id']))
-        {
-            if(isset($_POST) && count($_POST) > 0)     
-            {   
-                $params = array(
-					'npm' => $this->input->post('npm'),
-					'kdps' => $this->input->post('kdps'),
-					'jenjang' => $this->input->post('jenjang'),
-					'kelas' => $this->input->post('kelas'),
-					'nmmhs' => $this->input->post('nmmhs'),
-					'tmlhr' => $this->input->post('tmlhr'),
-					'tglhr' => $this->input->post('tglhr'),
-					'jk' => $this->input->post('jk'),
-					'agama' => $this->input->post('agama'),
-					'kewarga' => $this->input->post('kewarga'),
-					'pendidikan' => $this->input->post('pendidikan'),
-					'nmsmu' => $this->input->post('nmsmu'),
-					'jursmu' => $this->input->post('jursmu'),
-					'kotasmu' => $this->input->post('kotasmu'),
-					'kabsmu' => $this->input->post('kabsmu'),
-					'provsmu' => $this->input->post('provsmu'),
-					'pekerjaan' => $this->input->post('pekerjaan'),
-					'almt' => $this->input->post('almt'),
-					'notlp' => $this->input->post('notlp'),
-					'status' => $this->input->post('status'),
-					'jmsaudara' => $this->input->post('jmsaudara'),
-					'nmayah' => $this->input->post('nmayah'),
-					'almtayah' => $this->input->post('almtayah'),
-					'nmibu' => $this->input->post('nmibu'),
-					'sumbiaya' => $this->input->post('sumbiaya'),
-					'statuskul' => $this->input->post('statuskul'),
-					'tgdaftar' => $this->input->post('tgdaftar'),
-					'kurikulum' => $this->input->post('kurikulum'),
-					'IdUser' => $this->input->post('IdUser'),
-					'photo' => $this->input->post('photo'),
-                );
-
-                $this->Mahasiswa_model->update_mahasiswa($Id,$params);            
-                redirect('mahasiswa/index');
-            }
-            else
-            {
-                $data['_view'] = 'mahasiswa/edit';
-                $this->load->view('layouts/main',$data);
-            }
-        }
-        else
-            show_error('The mahasiswa you are trying to edit does not exist.');
-    } 
-
-    /*
-     * Deleting mahasiswa
-     */
-    function remove($Id)
+    public function getdata()
     {
-        $mahasiswa = $this->Mahasiswa_model->get_mahasiswa($Id);
-
-        // check if the mahasiswa exists before trying to delete it
-        if(isset($mahasiswa['Id']))
-        {
-            $this->Mahasiswa_model->delete_mahasiswa($Id);
-            redirect('mahasiswa/index');
-        }
-        else
-            show_error('The mahasiswa you are trying to delete does not exist.');
+        $data = $this->Mahasiswa_model->get_all_mahasiswa();
+        echo json_encode($data);
     }
-    
+
+    public function getonedata($Id)
+    {
+        $data = $this->Mahasiswa_model->get_mahasiswa($Id);
+        echo json_encode($data);
+    }
+
+    public function detail($Id)
+    {
+        $data['_view'] = 'mahasiswa/edit';
+        $this->load->view('layouts/main',$data);
+    }
 }

@@ -7,16 +7,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Main CSS-->
+  <link href="<?= site_url('assets/plugins/select2/css/select2.min.css');?>" rel='stylesheet'>
   <link rel="stylesheet" type="text/css" href="<?= site_url('assets/css/main.css');?>">
   <!-- Font-icon css-->
   <link rel="stylesheet" type="text/css"
     href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=base_url();?>assets/js/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="<?=base_url();?>assets/js/plugins/angular-datatables/dist/css/angular-datatables.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <!-- <link href="<?=base_url();?>assets/js/bower_components/select2/select2.css" rel='stylesheet'> -->
+    
 </head>
 
 <body class="app sidebar-mini">
   <div ng-include="header"></div>
-  <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-  <div ng-include="menu"></div>
   <main class="app-content">
     <div class="app-title">
       <div>
@@ -45,8 +50,20 @@
   <script src="<?= site_url('assets/js/popper.min.js');?>"></script>
   <script src="<?= site_url('assets/js/bootstrap.min.js');?>"></script>
   <script src="<?= site_url('assets/js/main.js');?>"></script>
+  <script src="<?= base_url(); ?>assets/js/plugins/angular-datatables/dist/angular-datatables.min.js"></script>
+  <script src="<?= base_url();?>assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="<?= base_url();?>assets/js/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
   <!-- The javascript plugin to display page loading on top-->
   <script src="<?= site_url('assets/js/plugins/pace.min.js');?>"></script>
+  <script src="<?= site_url('assets/js/plugins/jquery-loading-overlay/dist/loadingoverlay.min.js');?>"></script>
+  <script src="<?= site_url('assets/js/plugins/input-mask/angular-input-masks-standalone.min.js');?>"></script>
+  <script src="<?= site_url('assets/js/plugins/angular-locale_id-id.js');?>"></script>
+  <script src="<?= site_url('assets/js/plugins/currency.js');?>"></script>
+  <script src="<?= site_url('assets/plugins/select2/js/select2.full.min.js');?>"></script>
+  <!-- <script src="<?= site_url('assets/js/bower_components/select2/select2.min.js');?>"></script>
+  <script src="<?= site_url('assets/js/bower_components/select2/select2_locale_id.js');?>"></script> -->
+  <script src="<?= site_url('assets/js/bower_components/angular-select2/dist/angular-select2.min.js');?>"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Page specific javascripts-->
   <!-- Google analytics script-->
@@ -61,6 +78,29 @@
       ga('create', 'UA-72504830-1', 'auto');
       ga('send', 'pageview');
     }
+    
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+    $(document).ready(function(){
+      $('[data-toggle=tooltip]').hover(function(){
+          // on mouseenter
+          $(this).tooltip('show');
+      }, function(){
+          // on mouseleave
+          $(this).tooltip('hide');
+      });
+      $('.js-example-basic-single').select2();
+    });
+    $('.select2').select2({
+      placeholder: "Pilih item"
+    });
   </script>
 </body>
 
