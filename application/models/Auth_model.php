@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Auth_model extends CI_Model {
     public function getdata($data)
     {
+        $this->load->library('mylib');
         $result = $this->db->query("SELECT
             `pejabat`.`idpejabat`,
             `pejabat`.`NoSK` AS `NoSK1`,
@@ -31,6 +32,24 @@ class Auth_model extends CI_Model {
             `pejabat`.`idstruktural`
             LEFT JOIN `pengguna` ON `pegawai`.`idpengguna` = `pengguna`.`idpengguna`
         WHERE `pegawai`.`IdUser`= '$data->IdUser' AND pejabat.status='true'")->result();
+        if(count($item)==0){
+            $datapegawai = $this->mylib->restapi("pegawai", $data->Token);
+            $this->db->trans_begin();
+            $this->db->insert("pegawai", ['jenis'=>'Pegawai']);
+            $itempegawai = [
+                'Nama'=> $datapegawai->Nama,
+                'Alamat'=> $datapegawai->Alamat,
+                'Kontak'=> $datapegawai->Kontak,
+                'TempatLahir'=> $datapegawai->TempatLahir,
+                'TanggalLahir'=> $datapegawai->TanggalLahir,
+                'TahunMasuk'=> $datapegawai->TahunMasuk,
+                'NIK'=> $datapegawai->NIK,
+                'IdUser'=> $datapegawai->IdUser,
+                'photo'=> $datapegawai->photo,
+                'Status'=> $datapegawai->Status,
+                'idpengguna'=> $this->db->insert_id()
+            ];
+        }
         $item = $result[0];
         $item->role = array();
         foreach ($result as $key => $value) {

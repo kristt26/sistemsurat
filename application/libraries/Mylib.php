@@ -41,9 +41,8 @@ class Mylib
         }
     }
 
-    public function restapi($user, $pass, $url)
+    public function restapi($url, $token)
     {
-        $token = $this->session->userdata('Token');
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://restsimak.stimiksepnop.ac.id/api/".$url,
@@ -52,8 +51,7 @@ class Mylib
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "{\"Username\": \"$user\", \"Password\": \"$pass\"}",
+            CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_HTTPHEADER => array(
                 "content-type: application/json",
                 "authorization: $token"
