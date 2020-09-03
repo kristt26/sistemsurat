@@ -37,7 +37,10 @@ class Mylib
         if ($err) {
             return "cURL Error #:" . $err;
         } else {
-            return $response->data;
+            if($response->status){
+                return $response->data;
+            }else
+                return $response;
         }
     }
 
@@ -65,7 +68,36 @@ class Mylib
         if ($err) {
             return "cURL Error #:" . $err;
         } else {
-            return $response->data;
+            return $response;
+        }
+    }
+
+    public function sendmail($to_email, $message)
+    {
+        $from_email = "sistemsurat@stimiksepnop.ac.id";
+        $config['protocol'] = 'smtp';
+        $config['smtp_host'] = 'srv26.niagahoster.com';
+        $config['smtp_crypto'] = 'ssl';
+        $config['smtp_port'] = 465;
+        $config['smtp_user'] = $from_email;
+        $config['smtp_pass'] = 'stimik1011';
+        $config['charset'] = 'iso-8859-1';
+        $config['newline'] = "\r\n";
+        $config['smtp_timeout'] = '7';
+        $config['mailtype'] = 'html'; // or html
+        $config['validation'] = true;
+        $this->load->library('email', $config);
+        $this->email->from($from_email, 'Sistem Surat STIMIK ');
+        $this->email->to($to_email);
+        $this->email->subject('Nofication');
+        $this->email->message($message);
+
+        //Send mail
+        if ($this->email->send()) {
+            return true;
+        } else {
+            $a = show_error($this->email->print_debugger());
+            return $a;
         }
     }
 }

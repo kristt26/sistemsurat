@@ -32,10 +32,11 @@ class Auth_model extends CI_Model {
             `pejabat`.`idstruktural`
             LEFT JOIN `pengguna` ON `pegawai`.`idpengguna` = `pengguna`.`idpengguna`
         WHERE `pegawai`.`IdUser`= '$data->IdUser' AND pejabat.status='true'")->result();
-        if(count($item)==0){
+        $pegawai = $this->db->get_where('pegawai', ['IdUser'=>$data->IdUser])->result();
+        if(count($pegawai)==0){
             $datapegawai = $this->mylib->restapi("pegawai", $data->Token);
             $this->db->trans_begin();
-            $this->db->insert("pegawai", ['jenis'=>'Pegawai']);
+            $this->db->insert("pengguna", ['jenis'=>'Pegawai']);
             $itempegawai = [
                 'Nama'=> $datapegawai->Nama,
                 'Alamat'=> $datapegawai->Alamat,
@@ -49,35 +50,48 @@ class Auth_model extends CI_Model {
                 'Status'=> $datapegawai->Status,
                 'idpengguna'=> $this->db->insert_id()
             ];
-        }
-        $item = $result[0];
-        $item->role = array();
-        foreach ($result as $key => $value) {
-            $a = [
-                'idstruktural'=>$value->idstruktural,
-                'nm_struktural'=>$value->nm_struktural
-            ];
-            array_push($item->role, $a);
-        }
-        if($item->idpengguna==0){
-            $this->db->trans_begin();
-            $this->db->insert('pengguna', ['jenis'=>'Pegawai']);
-            $id = $this->db->insert_id();
-            $this->db->where('idpegawai', $item->idpegawai);
-            $this->db->update('pegawai', ['idpengguna'=>$id]);
-            if($this->db->trans_status()){
-                $this->db->trans_commit();
-                $item->idpengguna=$id;
-                $item->jenis="Pegawai";
-                return $$item;
-            }else{
-                $this->db->trans_rollback();
-                return false;
-            }
+            $this->db->insert('pegawai', $itempegawai);
+            $this->db->trans_commit();
+            return (object)['message'=>'jabatan anda belum terdaftar silahkan hubungi admin'];
         }else{
-            return $item;
+            if(count($result)!=0){
+                $item = $result[0];
+                $item->role = array();
+                foreach ($result as $key => $value) {
+                    $a = [
+                        'idstruktural'=>$value->idstruktural,
+                        'nm_struktural'=>$value->nm_struktural
+                    ];
+                    array_push($item->role, $a);
+                }
+                if(count($item->role)>0){
+                    if($item->idpengguna==0){
+                        $this->db->trans_begin();
+                        $this->db->insert('pengguna', ['jenis'=>'Pegawai']);
+                        $id = $this->db->insert_id();
+                        $this->db->where('idpegawai', $item->idpegawai);
+                        $this->db->update('pegawai', ['idpengguna'=>$id]);
+                        if($this->db->trans_status()){
+                            $this->db->trans_commit();
+                            $item->idpengguna=$id;
+                            $item->jenis="Pegawai";
+                            return $$item;
+                        }else{
+                            $this->db->trans_rollback();
+                            return false;
+                        }
+                    }else{
+                        return $item;
+                    }
+                }else{
+                    return (object)['message'=>'tidak ada struktural'];
+                }
+            }else{
+                return (object)['message'=>'Struktural anda belum di daftarkan, hubungi admin'];
+            }
+            
+            
         }
-        
     }    
 
 }

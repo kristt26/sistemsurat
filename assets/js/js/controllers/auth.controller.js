@@ -10,9 +10,13 @@
 		};
 		$scope.login = () => {
 			AuthService.post($scope.model).then((x) => {
-				var data = x.role.find((role) => role.nm_struktural == 'Admin');
-				if (data) window.location.href = helperServices.url + '/admin/dashboard';
-				else window.location.href = helperServices.url + '/user/dashboard';
+				if (x.message) {
+					swal('Information!', x.message, 'error');
+				} else {
+					var data = x.role.find((role) => role.nm_struktural == 'Admin');
+					if (data) window.location.href = helperServices.url + '/admin/dashboard';
+					else window.location.href = helperServices.url + '/user/dashboard';
+				}
 			});
 		};
 	}

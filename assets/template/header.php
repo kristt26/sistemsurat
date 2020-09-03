@@ -56,10 +56,13 @@
                 </li>
                 <li><a ng-class="{'app-menu__item active': active === 'Pegawai', 'app-menu__item':active !== 'Pegawai' }" href="{{url}}/admin/pegawai"><i class="icon fa fa-circle-o"></i> &nbsp; Pegawai</a>
                 </li>
+                </li>
             </ul>
         </li>
         <li><a ng-class="{'app-menu__item active': active === 'Pejabat', 'app-menu__item':active !== 'Pejabat' }" 
-        href="{{url}}/admin/pejabat"><i class="app-menu__icon fa fa-building"></i><span class="app-menu__label">Pelabat</span></a></li>
+        href="{{url}}/admin/pejabat"><i class="app-menu__icon fa fa-building"></i><span class="app-menu__label">Pejabat</span></a></li>
+        <li><a ng-class="{'app-menu__item active': active === 'Kotak Surat', 'app-menu__item':active !== 'Kotak Surat' }" 
+        href="{{url}}/admin/surat"><i class="app-menu__icon fa fa-envelope"></i><span class="app-menu__label">Kotak Surat</span></a></li>
     </ul>
 </aside>
 <script>

@@ -6,18 +6,18 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Main CSS-->
   <link href="<?= site_url('assets/plugins/select2/css/select2.min.css');?>" rel='stylesheet'>
   <link rel="stylesheet" type="text/css" href="<?= site_url('assets/css/main.css');?>">
-  <!-- Font-icon css-->
+  <link rel="stylesheet" href="<?=base_url();?>assets/js/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
   <link rel="stylesheet" type="text/css"
     href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="<?=base_url();?>assets/js/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
-    <link rel="stylesheet" href="<?=base_url();?>assets/js/plugins/angular-datatables/dist/css/angular-datatables.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <!-- <link href="<?=base_url();?>assets/js/bower_components/select2/select2.css" rel='stylesheet'> -->
-    
+  
+  
+  <link rel="stylesheet"
+    href="<?=base_url();?>assets/js/plugins/angular-datatables/dist/css/angular-datatables.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
 </head>
 
 <body class="app sidebar-mini">
@@ -39,12 +39,14 @@
       ?>
     </div>
   </main>
+  
   <script src="<?= site_url('assets/js/jquery-3.2.1.min.js');?>"></script>
   <script src="<?= site_url('assets/js/angular/angular.min.js');?>"></script>
   <script src="<?= site_url('assets/js/js/admin.app.js');?>"></script>
   <script src="<?= site_url('assets/js/js/services/admin.services.js');?>"></script>
   <script src="<?= site_url('assets/js/js/helpers/helper.services.js');?>"></script>
   <script src="<?= site_url('assets/js/js/controllers/admin.controllers.js');?>"></script>
+  <script data-require="angular-ui-bootstrap@0.3.0" data-semver="0.3.0" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.3.0.min.js"></script>
 
 
   <script src="<?= site_url('assets/js/popper.min.js');?>"></script>
@@ -78,7 +80,7 @@
       ga('create', 'UA-72504830-1', 'auto');
       ga('send', 'pageview');
     }
-    
+
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -88,19 +90,44 @@
       "autoWidth": false,
       "responsive": true,
     });
-    $(document).ready(function(){
-      $('[data-toggle=tooltip]').hover(function(){
-          // on mouseenter
-          $(this).tooltip('show');
-      }, function(){
-          // on mouseleave
-          $(this).tooltip('hide');
+    $(document).ready(function () {
+      $('[data-toggle=tooltip]').hover(function () {
+        // on mouseenter
+        $(this).tooltip('show');
+      }, function () {
+        // on mouseleave
+        $(this).tooltip('hide');
       });
       $('.js-example-basic-single').select2();
     });
     $('.select2').select2({
       placeholder: "Pilih item"
     });
+    $('.select22').select2({
+      placeholder: "Pilih item"
+    });
+
+
+    $(function () {
+      $(".asidebox").css('width',0);
+      $('#addClass').click(function (event) {
+        var open = document.getElementById('sidebar_secondary');
+        $(".asidebox").css('height',700);
+        $(".asidebox").css('width','50%');
+        
+        
+        // $('#sidebar_secondary').addClass('popup-box-on');
+
+      });
+
+      $('#removeClass').click(function () {
+        $(".asidebox").css('height',0);
+        $(".asidebox").css('width',0);
+
+        // $(".asidebox").css('display','none');
+      });
+    });
+
   </script>
 </body>
 
