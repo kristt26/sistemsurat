@@ -19,7 +19,7 @@ class Surat_model extends CI_Model
     /*
      * Get suratinternal by idarsip_surat
      */
-    public function get_mahasiswa($IdUser)
+    public function get_mahasiswa($npm)
     {
         $result = $this->db->query("SELECT
                 `suratmasuk`.*,
@@ -42,7 +42,7 @@ class Surat_model extends CI_Model
                 LEFT JOIN `pejabat` ON `pegawai`.`idpegawai` = `pejabat`.`idpegawai`
                 LEFT JOIN `struktural` ON `pejabat`.`idstruktural` = `struktural`.`idstruktural`
                 LEFT JOIN `mahasiswa` ON `pengguna`.`idpengguna` = `mahasiswa`.`idpengguna`
-            WHERE mahasiswa.IdUser = '$IdUser'")->result();
+            WHERE mahasiswa.npm = '$npm'")->result();
         if (count($result) > 0) {
             foreach ($result as $key => $value) {
                 $value->berkas = base_url('assets/berkas/') . $value->berkas;
