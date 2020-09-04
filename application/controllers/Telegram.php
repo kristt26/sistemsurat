@@ -35,7 +35,7 @@ class Telegram extends CI_Controller
             ),
         );
         $context = stream_context_create($options);
-        $result = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . sendMessage, false, $context);
+        $result = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "sendMessage", false, $context);
     }
 
 }
