@@ -135,7 +135,7 @@ class Mylib
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://www.surat.stimiksepnop.ac.id/telegram/handlemessage",
+            CURLOPT_URL => base_url("telegram/handlemessage"),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
