@@ -46,6 +46,7 @@ if (isset($_view) && $_view) {
   <script src="<?=site_url('assets/js/angular/angular.min.js');?>"></script>
   <script src="<?=site_url('assets/js/js/admin.app.js');?>"></script>
   <script src="<?=site_url('assets/js/js/services/admin.services.js');?>"></script>
+  <script src="<?=site_url('assets/js/js/services/auth.services.js');?>"></script>
   <script src="<?=site_url('assets/js/js/helpers/helper.services.js');?>"></script>
   <script src="<?=site_url('assets/js/js/controllers/admin.controllers.js');?>"></script>
   <script data-require="angular-ui-bootstrap@0.3.0" data-semver="0.3.0" src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.3.0.min.js"></script>

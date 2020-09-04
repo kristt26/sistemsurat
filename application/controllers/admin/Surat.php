@@ -11,9 +11,9 @@ class Surat extends CI_Controller
         parent::__construct();
         $this->load->model('Surat_model');
         $this->load->library('mylib');
-        if (!$this->session->userdata("logged_in")) {
-            redirect('auth');
-        }
+        // if (!$this->session->userdata("logged_in")) {
+        //     redirect('auth');
+        // }
     }
 
     /*

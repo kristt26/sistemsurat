@@ -15,7 +15,9 @@
 		.controller('PejabatController', PejabatController)
 		.controller('SuratController', SuratController);
 
-	function AdminController($scope, helperServices) {
+	function AdminController($scope, helperServices, AuthService) {
+		$scope.adminakses = false;
+		$scope.session = {};
 		$scope.url = helperServices.url;
 		$scope.main = $scope.url + '/assets/js/main.js';
 		$('.bs-component [data-toggle="tooltip"]').tooltip();
@@ -28,6 +30,11 @@
 		$scope.title = 'Sistem Surat';
 		$scope.active = 'Home';
 		$scope.dashboard = 'Dashboard';
+		AuthService.get().then(x=>{
+			$scope.session = x;
+			$scope.photo = x.photo? 'https://restsimak.stimiksepnop.ac.id/assets/file/photo/' + x.photo: $scope.url + '/assets/img/avatar.png';
+			$scope.adminakses = x.nm_struktural=='Admin' ? true: false;
+		})
 		$scope.header = helperServices.url + '/assets/template/header.php';
 		$scope.menu = helperServices.url + '/assets/template/menu.php';
 		$scope.$on('Title', function(evt, data) {
@@ -35,6 +42,12 @@
 			$scope.dashboard = data.title;
 			$scope.active = data.active;
 		});
+		$scope.detailpegawai=()=>{
+			window.location.href = $scope.url + "/admin/pegawai/detail/" + $scope.session.idpegawai;
+		}
+		$scope.logout =()=>{
+			window.location.href = $scope.url + '/auth/logout';
+		}
 	}
 
 	function HomeController($scope) {
@@ -275,7 +288,7 @@
 		$scope.detail;
 		$scope.model = {};
 		$scope.photo = helperServices.url + '/assets/img/avatar.png';
-		$scope.title = { title: 'Detail Mahasiswa', active: 'Detail Mahasiswa' };
+		$scope.title = { title: 'Detail Pegawai', active: 'Detail Pegawai' };
 		$scope.$emit('Title', $scope.title);
 		PegawaiService.getone().then((x) => {
 			$scope.datas = x;
@@ -374,6 +387,7 @@
 		$scope.title = { title: 'Kotak Surat', active: 'Kotak Surat' };
 		$scope.$emit('Title', $scope.title);
 		$scope.itemjenis;
+		$scope.navmailbox = 'inbox';
 		SuratService.get().then((x) => {
 			$scope.datas = x;
 			// $scope.penerimas = angular.copy($scope.datas.pegawai);
@@ -394,6 +408,12 @@
 			console.log(item);
 		};
 		$scope.simpan = () => {
+			$.LoadingOverlay('show', {
+				background: 'rgba(0, 0, 0, 0.85)',
+				image: $scope.url + '/assets/img/preloader.gif',
+				imageResizeFactor: 2,
+				imageAnimation: 'none'
+			});
 			var fd = new FormData();
 			if ($scope.myFile) {
 				var file = $scope.myFile;
@@ -411,8 +431,10 @@
 					$scope.tembusans = [];
 					$scope.tembusan = [];
 					console.log(x);
+					$.LoadingOverlay('hide');
 					$('.asidebox').css('height', 0);
 					$('.asidebox').css('width', 0);
+					swal('Information!', "Proses berhasil", 'success');
 				});
 			});
 		};
@@ -424,6 +446,9 @@
 			}else{
 				$scope.penerimas = angular.copy($scope.datas.eksternal);
 			}
+		}
+		$scope.setnav=(item)=>{
+			$scope.navmailbox = item;
 		}
 	}
 })();

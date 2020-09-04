@@ -29,9 +29,7 @@ class Surat_model extends CI_Model
             'suratkeluar' => array(),
             'pegawai' => $this->db->query("SELECT
                     `struktural`.*,
-                    `pegawai`.`idpengguna`,
-                    `pegawai`.`Nama`,
-                    `pegawai`.`idpegawai`
+                    `pegawai`.*
                 FROM
                     `pejabat`
                     LEFT JOIN `struktural` ON `pejabat`.`idstruktural` =
@@ -50,6 +48,7 @@ class Surat_model extends CI_Model
             `surat`.`idkategori_surat`,
             `surat`.`idpengguna` AS `idpengirim`,
             `pengguna`.`jenis`,
+            `struktural`.`nm_struktural`,
             IF(`pengguna`.`jenis`='Pegawai', (SELECT Nama from pegawai where pegawai.idpengguna=surat.idpengguna),
             (SELECT nama from eksternal where eksternal.idpengguna=surat.idpengguna)) as namapengirim
         FROM
@@ -59,26 +58,29 @@ class Surat_model extends CI_Model
             LEFT JOIN `pengguna` ON `surat`.`idpengguna` = `pengguna`.`idpengguna`
             LEFT JOIN `pegawai` ON `pegawai`.`idpengguna` = `surat`.`idpengguna`
             LEFT JOIN `eksternal` ON `eksternal`.`idpengguna` = `surat`.`idpengguna`
+            LEFT JOIN `pejabat` ON `pegawai`.`idpegawai` = `pejabat`.`idpegawai`
+            LEFT JOIN `struktural` ON `pejabat`.`idstruktural` = `struktural`.`idstruktural`
         WHERE suratmasuk.idpengguna = '$idpengguna'")->result();
 
         $datas['suratkeluar'] = $this->db->query("SELECT
-        `surat`.*,
-        `suratmasuk`.`idarsip_surat`,
-        `suratmasuk`.`status`,
-        `suratmasuk`.`tipe`,
-        `suratmasuk`.`idpengguna` AS `idpenerima`,
-        `pengguna`.`jenis`,
-            if(pengguna.jenis='Pegawai', (SELECT Nama from pegawai where pegawai.idpengguna=suratmasuk.idpengguna),
-            (SELECT Nama from pegawai where pegawai.idpengguna=suratmasuk.idpengguna)) as namapenerima
+            `surat`.*,
+            `suratmasuk`.`idarsip_surat`,
+            `suratmasuk`.`status`,
+            `suratmasuk`.`tipe`,
+            `suratmasuk`.`idpengguna` AS `idpenerima`,
+            `pengguna`.`jenis`,
+            `struktural`.`nm_struktural`,
+                if(pengguna.jenis='Pegawai', (SELECT Nama from pegawai where pegawai.idpengguna=suratmasuk.idpengguna),
+                (SELECT nmmhs from mahasiswa where mahasiswa.idpengguna=suratmasuk.idpengguna)) as namapenerima
         FROM
-        `surat`
-        LEFT JOIN `suratmasuk` ON `surat`.`idpengguna` = `suratmasuk`.`idpengguna`
-        LEFT JOIN `pengguna` ON `surat`.`idpengguna` = `pengguna`.`idpengguna`
-        LEFT JOIN `pegawai` ON `suratmasuk`.`idpengguna` = `pegawai`.`idpengguna`
-        LEFT JOIN `pejabat` ON `pegawai`.`idpegawai` = `pejabat`.`idpegawai`
-        LEFT JOIN `struktural` ON `struktural`.`idstruktural` =
-        `pejabat`.`idstruktural`
-        LEFT JOIN `mahasiswa` ON `mahasiswa`.`idpengguna` = `suratmasuk`.`idpengguna`
+            `surat`
+            LEFT JOIN `suratmasuk` ON `surat`.`idsuratkeluar` = `suratmasuk`.`idsuratkeluar`
+            LEFT JOIN `pengguna` ON `suratmasuk`.`idpengguna` = `pengguna`.`idpengguna`
+            LEFT JOIN `pegawai` ON `suratmasuk`.`idpengguna` = `pegawai`.`idpengguna`
+            LEFT JOIN `pejabat` ON `pegawai`.`idpegawai` = `pejabat`.`idpegawai`
+            LEFT JOIN `struktural` ON `struktural`.`idstruktural` =
+            `pejabat`.`idstruktural`
+            LEFT JOIN `mahasiswa` ON `mahasiswa`.`idpengguna` = `suratmasuk`.`idpengguna`
         WHERE surat.idpengguna='$idpengguna'")->result();
         return $datas;
     }
@@ -102,6 +104,7 @@ class Surat_model extends CI_Model
      */
     public function add_surat($params)
     {
+
         $this->db->trans_begin();
         $itemsurat = [
             'nomorsurat' => $params['nomorsurat'],
@@ -114,7 +117,11 @@ class Surat_model extends CI_Model
         ];
         $this->db->insert('surat', $itemsurat);
         $idsuratkeluar = $this->db->insert_id();
-        $mesg = $this->load->view('mailing', $params, true);
+        $data['data'] = [
+            'nm_struktural' => $this->session->userdata('nm_struktural'),
+            'berkas' => $params['berkas'],
+        ];
+        $mesg = $this->load->view('mailing', $data, true);
         foreach ($params['penerima'] as $key => $value) {
             $suratmasuk = [
                 'status' => 'false',
@@ -123,9 +130,11 @@ class Surat_model extends CI_Model
                 'tipe' => 'Penerima',
             ];
             $this->db->insert('suratmasuk', $suratmasuk);
-            if ($this->mylib->sendmail($params['Email'], $mesg)) {
-                $text = "From " . $params['nm_struktural'] . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
-                $this->mylib->sendtelegram($params['telegramid'], $text);
+            if ($this->sendmail($value['Email'], $mesg)) {
+                if (!is_null($value['chatid'])) {
+                    $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
+                    $this->mylib->sendtelegram($value['chatid'], $text);
+                }
             }
         }
         foreach ($params['tembusan'] as $key => $value) {
@@ -136,9 +145,11 @@ class Surat_model extends CI_Model
                 'tipe' => 'Tembusan',
             ];
             $this->db->insert('suratmasuk', $suratmasuk);
-            if ($this->mylib->sendmail($params['Email'], $mesg)) {
-                $text = "From " . $params['nm_struktural'] . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
-                $this->mylib->sendtelegram($params['telegramid'], $text);
+            if ($this->sendmail($value['Email'], $mesg)) {
+                if (!is_null($value['chatid'])) {
+                    $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
+                    $this->mylib->sendtelegram($value['chatid'], $text);
+                }
             }
         }
         if ($this->db->trans_status()) {
@@ -167,5 +178,36 @@ class Surat_model extends CI_Model
     public function delete_suratinternal($idarsip_surat)
     {
         return $this->db->delete('suratinternal', array('idarsip_surat' => $idarsip_surat));
+    }
+
+    public function sendmail($to_email, $message)
+    {
+
+        $from_email = "sistemsurat@stimiksepnop.ac.id";
+        $config['protocol'] = 'smtp';
+        $config['smtp_host'] = 'srv26.niagahoster.com';
+        $config['smtp_crypto'] = 'ssl';
+        $config['smtp_port'] = 465;
+        $config['smtp_user'] = $from_email;
+        $config['smtp_pass'] = 'Stimik1011';
+        $config['charset'] = 'iso-8859-1';
+        $config['newline'] = "\r\n";
+        $config['smtp_timeout'] = '7';
+        $config['mailtype'] = 'html'; // or html
+        // $config['validation'] = true;
+        $this->load->library('email');
+        $this->email->initialize($config);
+        $this->email->from($from_email, 'Sistem Surat STIMIK ');
+        $this->email->to($to_email);
+        $this->email->subject('Nofication');
+        $this->email->message($message);
+
+        //Send mail
+        if ($this->email->send()) {
+            return true;
+        } else {
+            $a = show_error($this->email->print_debugger());
+            return $a;
+        }
     }
 }

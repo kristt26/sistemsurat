@@ -6,6 +6,31 @@
     function AuthService($http, $q, helperServices) {
         var url = helperServices.url + '/auth/';
         var service = { Items: [] };
+
+        service.get = function (param) {
+            var def = $q.defer();
+            $http({
+                method: 'GET',
+                url: url + 'getsession',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: param
+            }).then(
+                (response) => {
+                    if(response.data.logged_in){
+                        def.resolve(response.data);
+                    }else{
+                        window.location.href = helperServices.url + '/auth';
+                    }
+                },
+                (err) => {
+                    swal("Information!", err.data, "error");
+                    def.reject(err);
+                }
+            );
+            return def.promise;
+        };
         
         service.post = function (param) {
             var def = $q.defer();

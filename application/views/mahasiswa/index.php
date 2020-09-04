@@ -6,7 +6,7 @@
 				<hr>
             </div>
             <div class="box-body">
-                <div style="width:100%">
+                <div class="table-responsive" style="width:100%">
 					<table id="example1" datatable="ng" class="table table-striped">
 						<thead>
 							<tr>

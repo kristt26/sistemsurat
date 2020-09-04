@@ -58,9 +58,9 @@ class Mahasiswa_model extends CI_Model
     /*
      * function to update mahasiswa
      */
-    public function update_mahasiswa($Id, $params)
+    public function update_mahasiswa($IdUser, $params)
     {
-        $this->db->where('Id', $Id);
+        $this->db->where('IdUser', $IdUser);
         return $this->db->update('mahasiswa', $params);
     }
 

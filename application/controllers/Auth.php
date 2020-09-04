@@ -37,6 +37,16 @@ class Auth extends CI_Controller
             }
         }
     }
+    public function getsession()
+    {
+        echo json_encode($this->session->userdata());
+    }
+
+    public function logout()
+    {
+        $this->session->sess_destroy();
+        redirect('auth');
+    }
 
 }
 

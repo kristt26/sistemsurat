@@ -33,6 +33,13 @@ class Mahasiswa extends CI_Controller
         echo json_encode($data);
     }
 
+    public function edit($IdUser)
+    {
+        $params = json_decode($this->security->xss_clean($this->input->raw_input_stream), true);
+        $data = $this->Mahasiswa_model->update_mahasiswa($IdUser, $params);
+        echo json_encode($data);
+    }
+
     public function detail($Id)
     {
         $data['_view'] = 'mahasiswa/edit';

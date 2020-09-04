@@ -40,9 +40,9 @@ class Pegawai_model extends CI_Model
     /*
      * function to update pegawai
      */
-    public function update_pegawai($idpegawai, $params)
+    public function update_pegawai($IdUser, $params)
     {
-        $this->db->where('idpegawai', $idpegawai);
+        $this->db->where('IdUser', $IdUser);
         return $this->db->update('pegawai', $params);
     }
 

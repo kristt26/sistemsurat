@@ -19,7 +19,7 @@
         font-size: 14px;
         line-height: 1.4;
         margin: 0;
-        padding: 0; 
+        padding: 0;
         -ms-text-size-adjust: 100%;
         -webkit-text-size-adjust: 100%; }
       table {
@@ -228,7 +228,7 @@
           font-size: inherit !important;
           font-weight: inherit !important;
           line-height: inherit !important;
-          text-decoration: none !important; } 
+          text-decoration: none !important; }
         .btn-primary table td:hover {
           background-color: #34495e !important; }
         .btn-primary a:hover {
@@ -251,8 +251,8 @@
                       <td>
                         <h1>Notification</h1>
                         <p>
-                            anda mendapat pesan dari <strong><?= $data['nm_struktural']?></strong><br>
-                            silahkan kunjungu link berikut <?= base_url();?>
+                            anda mendapat pesan dari <strong><?=$data['nm_struktural']?></strong><br>
+                            silahkan kunjungu link berikut <?=base_url();?>
                         </p>
                         <h3>Atau</h3>
                         <p>
@@ -265,7 +265,7 @@
                                 <table border="0" cellpadding="0" cellspacing="0">
                                   <tbody>
                                     <tr>
-                                      <td> <a href="<?= base_url();?>assets/berkas/<?= $data['berkas']?>" target="_blank">BERKAS</a> </td>
+                                      <td> <a href="<?=base_url();?>assets/berkas/<?=$data['berkas']?>" target="_blank">BERKAS</a> </td>
                                     </tr>
                                   </tbody>
                                 </table>

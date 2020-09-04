@@ -24,6 +24,7 @@ class Telegram extends CI_Controller
         $data = array(
             'chat_id' => $chatID,
             'text' => $message === "getId" ? "Id Chat Anda: " . $chatID : "Perintah yang anda masukkan salah",
+            'reply_to_message_id' => $msgid,
 
         );
         // use key 'http' even if you send the request to https://...

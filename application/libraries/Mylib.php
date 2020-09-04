@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Mylib
 {
+
     public function checkmahasiswa($data)
     {
         $status = false;
@@ -74,61 +75,23 @@ class Mylib
         }
     }
 
-    public function sendmail($to_email, $message)
-    {
-        $from_email = "sistemsurat@stimiksepnop.ac.id";
-        $config['protocol'] = 'smtp';
-        $config['smtp_host'] = 'srv26.niagahoster.com';
-        $config['smtp_crypto'] = 'ssl';
-        $config['smtp_port'] = 465;
-        $config['smtp_user'] = $from_email;
-        $config['smtp_pass'] = 'stimik1011';
-        $config['charset'] = 'iso-8859-1';
-        $config['newline'] = "\r\n";
-        $config['smtp_timeout'] = '7';
-        $config['mailtype'] = 'html'; // or html
-        $config['validation'] = true;
-        $this->load->library('email', $config);
-        $this->email->from($from_email, 'Sistem Surat STIMIK ');
-        $this->email->to($to_email);
-        $this->email->subject('Nofication');
-        $this->email->message($message);
-
-        //Send mail
-        if ($this->email->send()) {
-            return true;
-        } else {
-            $a = show_error($this->email->print_debugger());
-            return $a;
-        }
-    }
-
     public function sendtelegram($chatid, $message)
     {
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.telegram.org/bot673198510:AAGBR3JQ2llSTMnJveQWy-WNneDLbyfcyyE/sendMessage?chat_id='" . $chatid . '&text=' . $message,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "content-type: application/json",
-                "authorization: $token",
+        $TOKEN = "673198510:AAGBR3JQ2llSTMnJveQWy-WNneDLbyfcyyE";
+        $data = array(
+            'chat_id' => $chatid,
+            'text' => $message,
+        );
+        // use key 'http' even if you send the request to https://...
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data),
             ),
-        ));
-        $response = json_decode(curl_exec($curl));
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            return "cURL Error #:" . $err;
-        } else {
-            return $response;
-        }
+        );
+        $context = stream_context_create($options);
+        $result = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "sendMessage", false, $context);
     }
 
     public function testtelegram($message)
