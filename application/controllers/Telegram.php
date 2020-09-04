@@ -35,7 +35,7 @@ class Telegram extends CI_Controller
             ),
         );
         $context = stream_context_create($options);
-        $result = file_get_contents(request_url('sendMessage'), false, $context);
+        $result = file_get_contents($this->request_url('sendMessage'), false, $context);
     }
 
     public function create_response($text)
@@ -53,18 +53,12 @@ class Telegram extends CI_Controller
             $chatid = $message_data["chat"]["id"];
             $message_id = $message_data["message_id"];
             $text = $message_data["text"];
-            $response = create_response($text);
-            send_reply($chatid, $message_id, $response);
+            $response = $this->create_response($text);
+            $this->send_reply($chatid, $message_id, $response);
         }
         return $updateid;
 
         echo json_encode($params);
-    }
-
-    public function handlemessage()
-    {
-        $entityBody = file_get_contents('php://input');
-        echo json_encode(['test' => 'okokokokokok']);
     }
 }
 
