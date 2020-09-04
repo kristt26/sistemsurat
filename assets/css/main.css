@@ -2299,7 +2299,7 @@ pre code {
 }
 
 select.form-control:not([size]):not([multiple]) {
-    height: calc(2.0625rem + 4px);
+    /* height: calc(2.0625rem + 4px); */
 }
 
 select.form-control:focus::-ms-value {
@@ -16615,6 +16615,10 @@ a:focus {
     .asidebox {
         width: 100%;
     }
+}
+
+.justselect{
+    height: none !important;
 }
 
 /*

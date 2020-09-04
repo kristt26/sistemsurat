@@ -363,6 +363,7 @@
 
 	function SuratController($scope, SuratService, helperServices) {
 		$scope.url = helperServices.url;
+		$scope.jenis = helperServices.jenis;
 		$scope.datas = [];
 		$scope.model = {};
 		$scope.penerima = {};
@@ -371,9 +372,10 @@
 		$scope.tembusan = [];
 		$scope.title = { title: 'Kotak Surat', active: 'Kotak Surat' };
 		$scope.$emit('Title', $scope.title);
+		$scope.itemjenis;
 		SuratService.get().then((x) => {
 			$scope.datas = x;
-			$scope.penerimas = angular.copy($scope.datas.pegawai);
+			// $scope.penerimas = angular.copy($scope.datas.pegawai);
 			$.LoadingOverlay('hide');
 		});
 		$scope.selectpenerima = (item) => {
@@ -381,9 +383,11 @@
 			$scope.tembusans = angular.copy($scope.datas.pegawai);
 			$scope.tembusan = [];
 			var data = $scope.tembusans.find((x) => x.idpengguna == item.idpengguna);
-			var index = $scope.tembusans.indexOf(data);
-			$scope.tembusans.splice(index, 1);
-			console.log($scope.tembusans);
+			if(data){
+				var index = $scope.tembusans.indexOf(data);
+				$scope.tembusans.splice(index, 1);
+				console.log($scope.tembusans);
+			}
 		};
 		$scope.selecttembusan = (item) => {
 			console.log(item);
@@ -394,6 +398,7 @@
 				var file = $scope.myFile;
 				fd.append('file', file[0]);
 			}
+			$scope.model.penerima = $scope.penerima;
 			$scope.model.tembusan = $scope.tembusan;
 			SuratService.upload(fd).then((file) => {
 				$scope.model.berkas = file.file;
@@ -410,5 +415,14 @@
 				});
 			});
 		};
+		$scope.selectjenis = (item)=>{
+			if(item == 'Pegawai'){
+				$scope.penerimas = angular.copy($scope.datas.pegawai);
+			}else if(item == 'Mahasiswa'){
+				$scope.penerimas = angular.copy($scope.datas.mahasiswa);
+			}else{
+				$scope.penerimas = angular.copy($scope.datas.eksternal);
+			}
+		}
 	}
 })();

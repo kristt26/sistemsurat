@@ -21,10 +21,10 @@ function helperServices($location) {
 			}
 		});
 		return map;
-    };
+	};
     service.ruangan = ['+','++','IIIA','IIIB','IIIC','IIIDE', 'IVB', 'IVDE', 'KEEROM', 'LAB-S', 'LABHW', 'LABSW' ];
     service.hari = ['SENIN','SELASA','RABU','KAMIS','JUMAT','SABTU'];
-    service.jenis = ['DOSEN','ASISTEN'];
+    service.jenis = ['Pegawai', 'Mahasiswa', 'Eksternal'];
     service.statusmengajar = ['Y','T'];
 	service.romanize =  (num)=> {
 		if (isNaN(num))

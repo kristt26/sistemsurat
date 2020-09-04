@@ -84,10 +84,30 @@
           <div class="col-md-12"  style="height: 750px; overflow-y:auto">
             <form class="form-horizontal" ng-submit="simpan()">
               <div class="form-group row">
-                <label class="control-label col-md-3">Penerima</label>
+                <label class="control-label col-md-3">Jenis</label>
                 <div class="col-md-8">
+                  <select class="form-control justselect" ng-options="item as item for item in jenis"
+                    ng-model="itemjenis" ng-change="selectjenis(itemjenis); show = true">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row" ng-show="show">
+                <label class="control-label col-md-3">Penerima</label>
+                <div class="col-md-8" ng-show="itemjenis==='Pegawai'">
                   <select class="form-control select22" ng-options="item as item.nm_struktural for item in penerimas"
                     ng-model="penerima" ng-change="selectpenerima(penerima)">
+                    <option></option>
+                  </select>
+                </div>
+                <div class="col-md-8" ng-show="itemjenis==='Mahasiswa'">
+                  <select class="form-control select22"  multiple="multiple" ng-options="item as item.nmmhs for item in penerimas"
+                    ng-model="penerima" ng-change="selectpenerima(penerima)">
+                    <option></option>
+                  </select>
+                </div>
+                <div class="col-md-8" ng-show="itemjenis==='Eksternal'">
+                  <select class="form-control select22" ng-options="item as item.nmmhs for item in eksternals"
+                    ng-model="eksternal" ng-change="selectpenerima(eksternal)">
                     <option></option>
                   </select>
                 </div>
