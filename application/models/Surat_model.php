@@ -21,7 +21,7 @@ class Surat_model extends CI_Model
      */
     public function get_mahasiswa($IdUser)
     {
-        return $this->db->query("SELECT
+        $result = $this->db->query("SELECT
                 `suratmasuk`.*,
                 `surat`.`nomorsurat`,
                 `surat`.`perihal`,
@@ -43,6 +43,12 @@ class Surat_model extends CI_Model
                 LEFT JOIN `struktural` ON `pejabat`.`idstruktural` = `struktural`.`idstruktural`
                 LEFT JOIN `mahasiswa` ON `pengguna`.`idpengguna` = `mahasiswa`.`idpengguna`
             WHERE mahasiswa.IdUser = '$IdUser'")->result();
+        if (count($result) > 0) {
+            foreach ($result as $key => $value) {
+                $value->berkas = base_url('assets/berkas/') . $value->berkas;
+            }
+        }
+        return $result;
     }
 
     public function getdatasurat()
