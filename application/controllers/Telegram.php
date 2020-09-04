@@ -57,8 +57,6 @@ class Telegram extends CI_Controller
             $this->send_reply($chatid, $message_id, $response);
         }
         return $updateid;
-
-        echo json_encode($params);
     }
 }
 
