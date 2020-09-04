@@ -45,4 +45,5 @@ class Mahasiswa extends CI_Controller
         $data['_view'] = 'mahasiswa/edit';
         $this->load->view('layouts/main', $data);
     }
+
 }

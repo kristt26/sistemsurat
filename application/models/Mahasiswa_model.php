@@ -65,10 +65,6 @@ class Mahasiswa_model extends CI_Model
     }
 
     /*
-     * function to delete mahasiswa
-     */
-    public function delete_mahasiswa($Id)
-    {
-        return $this->db->delete('mahasiswa', array('Id' => $Id));
-    }
+ * function to delete mahasiswa
+ */
 }

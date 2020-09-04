@@ -19,6 +19,31 @@ class Surat_model extends CI_Model
     /*
      * Get suratinternal by idarsip_surat
      */
+    public function get_mahasiswa($IdUser)
+    {
+        return $this->db->query("SELECT
+                `suratmasuk`.*,
+                `surat`.`nomorsurat`,
+                `surat`.`perihal`,
+                `surat`.`tanggal`,
+                `surat`.`berkas`,
+                `surat`.`idkategori_surat`,
+                `surat`.`idpengguna` AS `idpengirim`,
+                `pengguna`.`jenis`,
+                `struktural`.`nm_struktural`,
+                IF(`pengguna`.`jenis`='Pegawai', (SELECT Nama from pegawai where pegawai.idpengguna=surat.idpengguna),
+                (SELECT nama from eksternal where eksternal.idpengguna=surat.idpengguna)) as namapengirim
+            FROM
+                `suratmasuk`
+                LEFT JOIN `surat` ON `surat`.`idsuratkeluar` = `suratmasuk`.`idsuratkeluar`
+                LEFT JOIN `pengguna` ON `suratmasuk`.`idpengguna` = `pengguna`.`idpengguna`
+                LEFT JOIN `pegawai` ON `pegawai`.`idpengguna` = `surat`.`idpengguna`
+                LEFT JOIN `eksternal` ON `eksternal`.`idpengguna` = `surat`.`idpengguna`
+                LEFT JOIN `pejabat` ON `pegawai`.`idpegawai` = `pejabat`.`idpegawai`
+                LEFT JOIN `struktural` ON `pejabat`.`idstruktural` = `struktural`.`idstruktural`
+                LEFT JOIN `mahasiswa` ON `pengguna`.`idpengguna` = `mahasiswa`.`idpengguna`
+            WHERE mahasiswa.IdUser = '$IdUser'")->result();
+    }
 
     public function getdatasurat()
     {
