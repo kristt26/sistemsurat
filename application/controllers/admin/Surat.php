@@ -102,7 +102,7 @@ class Surat extends CI_Controller
 
     public function suratmahasiswa($IdUser)
     {
-        $data = $this->Surat_model->get_mahasiswa($Id);
+        $data = $this->Surat_model->get_mahasiswa($IdUser);
         echo json_encode($data);
     }
 
