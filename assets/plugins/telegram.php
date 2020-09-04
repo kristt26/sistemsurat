@@ -44,6 +44,7 @@ function process_message($message)
     return $updateid;
 }
 
+
 $entityBody = file_get_contents('php://input');
 $message = json_decode($entityBody, true);
 echo $entityBody;
