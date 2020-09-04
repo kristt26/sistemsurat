@@ -30,6 +30,11 @@ function create_response($text)
     return "definisi " . $text;
 }
 
+function sendDara()
+{
+    # code...
+}
+
 function process_message($message)
 {
     $updateid = $message["update_id"];
@@ -43,7 +48,6 @@ function process_message($message)
     }
     return $updateid;
 }
-
 
 $entityBody = file_get_contents('php://input');
 $message = json_decode($entityBody, true);
