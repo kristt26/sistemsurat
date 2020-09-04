@@ -370,6 +370,7 @@
 		$scope.penerimas = [];
 		$scope.tembusans = [];
 		$scope.tembusan = [];
+		$scope.show=false;
 		$scope.title = { title: 'Kotak Surat', active: 'Kotak Surat' };
 		$scope.$emit('Title', $scope.title);
 		$scope.itemjenis;
