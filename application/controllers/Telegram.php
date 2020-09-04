@@ -22,7 +22,7 @@ class Telegram extends CI_Controller
     public function handlemessage()
     {
         $entityBody = file_get_contents('php://input');
-        $message = json_decode($entityBody, true);
+        echo json_encode(['test' => 'okokokokokok']);
     }
 }
 
