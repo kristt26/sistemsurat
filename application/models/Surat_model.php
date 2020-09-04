@@ -55,7 +55,7 @@ class Surat_model extends CI_Model
         FROM
             `suratmasuk`
             LEFT JOIN `surat`
-        ON `surat`.`idsuratkeluar` = `surat`.`suratmasuk`.`idsuratkeluar`
+        ON `surat`.`idsuratkeluar` = `suratmasuk`.`idsuratkeluar`
             LEFT JOIN `pengguna` ON `surat`.`idpengguna` = `pengguna`.`idpengguna`
             LEFT JOIN `pegawai` ON `pegawai`.`idpengguna` = `surat`.`idpengguna`
             LEFT JOIN `eksternal` ON `eksternal`.`idpengguna` = `surat`.`idpengguna`
