@@ -42,7 +42,8 @@ class Surat extends CI_Controller
         if($result !== null){
             $mesg = $this->load->view('mailing', $params, true);
             if($this->mylib->sendmail($params['Email'], $mesg)){
-                
+                $text = "From ".$params['nm_struktural']." \nBerkas Lampiran: ". base_url('assets/berkas/').$params['berkas'];
+                $this->mylib->sendtelegram($params['telegramid'], $text);
             }
         }
         echo json_encode($result);
