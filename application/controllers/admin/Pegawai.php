@@ -37,7 +37,7 @@ class Pegawai extends CI_Controller
     {
         $params = json_decode($this->security->xss_clean($this->input->raw_input_stream), true);
         $data = $this->Pegawai_model->update_pegawai($IdUser, $params);
-        echo json_encode($data);
+        echo json_encode(['pesan' => $data]);
     }
 
     public function detail($idpegawai)

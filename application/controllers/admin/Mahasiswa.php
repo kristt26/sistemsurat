@@ -10,6 +10,8 @@ class Mahasiswa extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Mahasiswa_model');
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     }
 
     /*
