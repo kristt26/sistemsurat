@@ -17,7 +17,7 @@
 								<div class="app-sidebar__user">
 									<img class="app-sidebar__user-avatar avatar-profile" ng-src="{{photo}}"
 										alt="User Image" style="width:200px; height: 200px">
-									
+
 								</div>
 								<p class="text-center title-profile"><strong>{{datas.Nama}}</strong></p>
 								<p class="text-center titlesecond-profile">{{datas.NIK}}</p>
@@ -38,6 +38,10 @@
 								<div class="d-flex justify-content-between">
 									<p><span class="fa fa-map-marker"></span> Status</p>
 									<p><strong>{{datas.Status}}</strong></p>
+								</div><hr>
+								<div class="d-flex justify-content-between">
+									<p><span class="fa fa-map-marker"></span> Id Chat Telegram</p>
+									<p class="d-flex justify-content-between"><strong><input type="text" class="form-control" ng-model="datas.chatid" ng-focus="true"></strong><button class="btn btn-primary btn-sm" ng-click="updatetelegram(datas)">Update</button></p>
 								</div><hr>
 							</div>
 						</div>
@@ -63,7 +67,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 						</div>
 					</div>
 				</div>

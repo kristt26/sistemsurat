@@ -91,7 +91,9 @@ class Mylib
             ),
         );
         $context = stream_context_create($options);
+        $set = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "setWebhook?url=https://surat.stimiksepnop.ac.id/telegram/handlemessage");
         $result = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "sendMessage", false, $context);
+        return $result;
     }
 
     public function testtelegram($message)

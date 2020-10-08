@@ -31,7 +31,8 @@ class Auth_model extends CI_Model
             `pegawai`.`IdUser`,
             `pegawai`.`photo`,
             `pegawai`.`Status`,
-            `pegawai`.`idpengguna`
+            `pegawai`.`idpengguna`,
+            `pegawai`.`chatid`
         FROM
             `pegawai`
             LEFT JOIN `pejabat` ON `pejabat`.`idpegawai` = `pegawai`.`idpegawai`

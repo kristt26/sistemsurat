@@ -53,4 +53,14 @@ class Pegawai_model extends CI_Model
     {
         return $this->db->delete('pegawai', array('idpegawai' => $idpegawai));
     }
+
+    public function update_telegram($params)
+    {
+        $item = [
+            'chatid' => $params['chatid'],
+        ];
+        $this->db->where('idpegawai', $params['idpegawai']);
+        $result = $this->db->update('pegawai', $item);
+        return $result;
+    }
 }

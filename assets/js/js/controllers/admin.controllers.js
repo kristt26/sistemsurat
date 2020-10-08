@@ -50,10 +50,26 @@
 		}
 	}
 
-	function HomeController($scope) {
+	function HomeController($scope, PegawaiService, helperServices) {
 		$scope.title = { title: 'Dashboard', active: 'Home' };
 		$scope.$emit('Title', $scope.title);
-		$.LoadingOverlay('hide');
+		PegawaiService.checkidtelegram().then(x=>{
+			if(!x.chatid){
+				swal({
+					title: 'Information',
+					text: 'Chat id telegram anda kosong, mohon mengisi chat id anda',
+					icon: 'info',
+					// buttons: true,
+					// dangerMode: false
+				}).then((willDelete) => {
+					if (willDelete) {
+						document.location.href= helperServices.url+"/admin/pegawai/detail/" + x.idpegawai;
+					}
+				});
+				
+			}
+			$.LoadingOverlay('hide');
+		})
 	}
 
 	function StrukturController($scope, StrukturService) {
@@ -69,7 +85,7 @@
 			swal({
 				title: 'Confirm!!',
 				text: 'Anda yakin akan melanjutkan proses?',
-				icon: 'warning',
+				icon: 'info',
 				buttons: true,
 				dangerMode: true
 			}).then((willDelete) => {
@@ -299,6 +315,13 @@
 		$scope.back = () => {
 			$window.history.back();
 		};
+		$scope.updatetelegram = (item)=>{
+			PegawaiService.updatetelegram(item).then(x=>{
+				swal('Success', {
+					icon: 'success'
+				});
+			})
+		}
 	}
 
 	function PejabatController($scope, PejabatService, $window, StrukturService, PegawaiService) {

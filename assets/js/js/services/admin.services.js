@@ -398,6 +398,53 @@
 			);
 			return def.promise;
 		};
+
+		service.checkidtelegram = function() {
+			var def = $q.defer();
+			$http({
+				method: 'Get',
+				url: url + 'checkidtelegram',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(
+				(response) => {
+					def.resolve(response.data);
+				},
+				(err) => {
+					message.error(err.data);
+					def.reject(err);
+				}
+			);
+			return def.promise;
+		};
+
+		service.updatetelegram = function(param) {
+			var def = $q.defer();
+			$http({
+				method: 'put',
+				url: url + 'updatetelegram',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				data: param
+			}).then(
+				(response) => {
+					if (response.data) {
+						service.Items.chatid=param.chatid;
+					} else {
+						swal('Information!', 'Proses Gagal', 'error');
+					}
+					def.resolve(response.data);
+				},
+				(err) => {
+					swal('Information!', err.data, 'error');
+					def.reject(err);
+				}
+			);
+			return def.promise;
+		};
+
 		service.getdetailmhs = function(id) {
 			var def = $q.defer();
 			$http({

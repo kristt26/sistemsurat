@@ -45,5 +45,16 @@ class Pegawai extends CI_Controller
         $data['_view'] = 'pegawai/edit';
         $this->load->view('layouts/main', $data);
     }
+    public function checkidtelegram()
+    {
+        $id = $this->session->userdata();
+        echo json_encode($id);
+    }
 
+    public function updatetelegram()
+    {
+        $params = json_decode($this->security->xss_clean($this->input->raw_input_stream), true);
+        $data = $this->Pegawai_model->update_telegram($params);
+        echo json_encode($data);
+    }
 }
