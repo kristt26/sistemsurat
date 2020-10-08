@@ -35,6 +35,7 @@ class Telegram extends CI_Controller
                 'content' => http_build_query($data),
             ),
         );
+        $set = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "setWebhook?url=https://surat.stimiksepnop.ac.id/telegram/handlemessage");
         $context = stream_context_create($options);
         $result = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "sendMessage", false, $context);
     }
