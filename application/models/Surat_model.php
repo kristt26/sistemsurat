@@ -160,13 +160,19 @@ class Surat_model extends CI_Model
                 'idpengguna' => $value['idpengguna'],
                 'tipe' => 'Penerima',
             ];
-            $this->db->insert('suratmasuk', $suratmasuk);
-            if ($this->sendmail($value['Email'], $mesg)) {
-                if (!is_null($value['chatid'])) {
-                    $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
-                    $this->mylib->sendtelegram($value['chatid'], $text);
-                }
+            $simpan = $this->db->insert('suratmasuk', $suratmasuk);
+            if ($simpan) {
+                $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
+                $sendteletegram = $this->mylib->sendtelegram($value['chatid'], $text);
+                $a = $sendteletegram;
             }
+
+            // if ($this->sendmail($value['Email'], $mesg)) {
+            //     if (!is_null($value['chatid'])) {
+            //         $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
+            //         $this->mylib->sendtelegram($value['chatid'], $text);
+            //     }
+            // }
         }
         foreach ($params['tembusan'] as $key => $value) {
             $suratmasuk = [
@@ -176,12 +182,16 @@ class Surat_model extends CI_Model
                 'tipe' => 'Tembusan',
             ];
             $this->db->insert('suratmasuk', $suratmasuk);
-            if ($this->sendmail($value['Email'], $mesg)) {
-                if (!is_null($value['chatid'])) {
-                    $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
-                    $this->mylib->sendtelegram($value['chatid'], $text);
-                }
+            if (!is_null($value['chatid'])) {
+                $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
+                $this->mylib->sendtelegram($value['chatid'], $text);
             }
+            // if ($this->sendmail($value['Email'], $mesg)) {
+            //     if (!is_null($value['chatid'])) {
+            //         $text = "From " . $this->session->userdata('nm_struktural') . " \nBerkas Lampiran: " . base_url('assets/berkas/') . $params['berkas'];
+            //         $this->mylib->sendtelegram($value['chatid'], $text);
+            //     }
+            // }
         }
         if ($this->db->trans_status()) {
             $this->db->trans_commit();
