@@ -17,7 +17,7 @@
 								<div class="app-sidebar__user">
 									<img class="app-sidebar__user-avatar avatar-profile" ng-src="{{photo}}"
 										alt="User Image" style="width:200px; height: 200px">
-									
+
 								</div>
 								<p class="text-center title-profile"><strong>{{datas.nmmhs}}</strong></p>
 								<p class="text-center titlesecond-profile">{{datas.npm}}</p>
@@ -43,9 +43,9 @@
 									<p><span class="fa fa-map-marker"></span> Kelas</p>
 									<p>{{detail.kelas}}</p>
 								</div><hr>
-								
-								
-								
+
+
+
 							</div>
 						</div>
 					</div>
@@ -76,7 +76,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 						</div>
 						<div class="card" style="margin-bottom: 10px">
 							<div class="card-header text-center">
@@ -100,7 +100,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 						</div>
 						<div class="card" style="margin-bottom: 10px">
 							<div class="card-header text-center">

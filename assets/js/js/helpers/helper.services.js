@@ -4,7 +4,8 @@ function helperServices($location) {
 	var service = { IsBusy: false, absUrl: $location.$$absUrl };
 	service.url = $location.$$protocol + '://' + $location.$$host;
 	if ($location.$$port) {
-		service.url = service.url + ':' + $location.$$port + '/sistemsurat';
+		// service.url = service.url + ':' + $location.$$port + '/sistemsurat';
+		service.url = service.url + ':' + $location.$$port;
 	}
 
 	// '    http://localhost:5000';
@@ -15,24 +16,24 @@ function helperServices($location) {
 			const key = keyGetter(item);
 			const collection = map.get(key);
 			if (!collection) {
-				map.set(key, [ item ]);
+				map.set(key, [item]);
 			} else {
 				collection.push(item);
 			}
 		});
 		return map;
-    };
-    service.ruangan = ['+','++','IIIA','IIIB','IIIC','IIIDE', 'IVB', 'IVDE', 'KEEROM', 'LAB-S', 'LABHW', 'LABSW' ];
-    service.hari = ['SENIN','SELASA','RABU','KAMIS','JUMAT','SABTU'];
-    service.jenis = ['DOSEN','ASISTEN'];
-    service.statusmengajar = ['Y','T'];
-	service.romanize =  (num)=> {
+	};
+	service.ruangan = ['+', '++', 'IIIA', 'IIIB', 'IIIC', 'IIIDE', 'IVB', 'IVDE', 'KEEROM', 'LAB-S', 'LABHW', 'LABSW'];
+	service.hari = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+	service.jenis = ['Pegawai', 'Mahasiswa', 'Eksternal'];
+	service.statusmengajar = ['Y', 'T'];
+	service.romanize = (num) => {
 		if (isNaN(num))
 			return NaN;
 		var digits = String(+num).split(""),
-			key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
-				   "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
-				   "","I","II","III","IV","V","VI","VII","VIII","IX"],
+			key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
+				"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
+				"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
 			roman = "",
 			i = 3;
 		while (i--)

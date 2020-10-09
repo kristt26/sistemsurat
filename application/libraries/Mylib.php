@@ -1,12 +1,13 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 class Mylib
 {
+
     public function checkmahasiswa($data)
     {
         $status = false;
         foreach ($data as $key => $value) {
-            if($value->Nama=="Mahasiswa"){
+            if ($value->Nama == "Mahasiswa") {
                 $status = true;
             }
         }
@@ -37,10 +38,12 @@ class Mylib
         if ($err) {
             return "cURL Error #:" . $err;
         } else {
-            if($response->status){
+            if ($response->status) {
                 return $response->data;
-            }else
+            } else {
                 return $response;
+            }
+
         }
     }
 
@@ -48,7 +51,7 @@ class Mylib
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://restsimak.stimiksepnop.ac.id/api/".$url,
+            CURLOPT_URL => "https://restsimak.stimiksepnop.ac.id/api/" . $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -57,7 +60,7 @@ class Mylib
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_HTTPHEADER => array(
                 "content-type: application/json",
-                "authorization: $token"
+                "authorization: $token",
             ),
         ));
         $response = json_decode(curl_exec($curl));
@@ -72,49 +75,41 @@ class Mylib
         }
     }
 
-    public function sendmail($to_email, $message)
+    public function sendtelegram($chatid, $message)
     {
-        $from_email = "sistemsurat@stimiksepnop.ac.id";
-        $config['protocol'] = 'smtp';
-        $config['smtp_host'] = 'srv26.niagahoster.com';
-        $config['smtp_crypto'] = 'ssl';
-        $config['smtp_port'] = 465;
-        $config['smtp_user'] = $from_email;
-        $config['smtp_pass'] = 'stimik1011';
-        $config['charset'] = 'iso-8859-1';
-        $config['newline'] = "\r\n";
-        $config['smtp_timeout'] = '7';
-        $config['mailtype'] = 'html'; // or html
-        $config['validation'] = true;
-        $this->load->library('email', $config);
-        $this->email->from($from_email, 'Sistem Surat STIMIK ');
-        $this->email->to($to_email);
-        $this->email->subject('Nofication');
-        $this->email->message($message);
-
-        //Send mail
-        if ($this->email->send()) {
-            return true;
-        } else {
-            $a = show_error($this->email->print_debugger());
-            return $a;
-        }
+        $TOKEN = "673198510:AAGBR3JQ2llSTMnJveQWy-WNneDLbyfcyyE";
+        $data = array(
+            'chat_id' => $chatid,
+            'text' => $message,
+        );
+        // use key 'http' even if you send the request to https://...
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data),
+            ),
+        );
+        $context = stream_context_create($options);
+        $set = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "setWebhook?url=https://surat.stimiksepnop.ac.id/telegram/handlemessage");
+        $result = file_get_contents("https://api.telegram.org/bot" . $TOKEN . "/" . "sendMessage", false, $context);
+        return $result;
     }
 
-    public function sendtelegram($chatid, $message)
+    public function testtelegram($message)
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.telegram.org/bot673198510:AAGBR3JQ2llSTMnJveQWy-WNneDLbyfcyyE/sendMessage?chat_id='".$chatid.'&text='.$message,
+            CURLOPT_URL => base_url("telegram/handlemessage"),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode($message),
             CURLOPT_HTTPHEADER => array(
                 "content-type: application/json",
-                "authorization: $token"
             ),
         ));
         $response = json_decode(curl_exec($curl));

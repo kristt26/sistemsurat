@@ -7,14 +7,15 @@
         <h4 class="tile-title folder-head">Folders</h4>
         <div class="tile-body">
           <ul class="nav nav-pills flex-column mail-nav">
-            <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-inbox fa-fw"></i> Inbox<span
+            <li ng-class="{'nav-item active': navmailbox === 'inbox', 'nav-item': navmailbox !== 'inbox'}"><a class="nav-link" href="" ng-click="setnav('inbox')"><i class="fa fa-inbox fa-fw"></i> Kotak Masuk<span
                   class="badge badge-pill badge-primary float-right">12</span></a></li>
-            <li class="nav-item active"><a class="nav-link" href="#"><i class="fa fa-envelope-o fa-fw"></i> Sent</a>
+                  <li ng-class="{'nav-item active': navmailbox === 'tembusan', 'nav-item': navmailbox !== 'tembusan'}"><a class="nav-link" href="" ng-click="setnav('tembusan')"><i class="fa fa-file-text-o fa-fw"></i> Kotak Tembusan</a></li>
+            <li ng-class="{'nav-item active': navmailbox === 'send', 'nav-item': navmailbox !== 'send'}"><a class="nav-link" href="" ng-click="setnav('send')"><i class="fa fa-envelope-o fa-fw"></i> Kotak Keluar</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-file-text-o fa-fw"></i> Drafts</a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-filter fa-fw"></i> Junk <span
+
+            <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-filter fa-fw"></i> Junk <span
                   class="badge badge-pill badge-primary float-right">8</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-trash-o fa-fw"></i> Trash</a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-trash-o fa-fw"></i> Trash</a></li> -->
           </ul>
         </div>
       </div>
@@ -30,16 +31,85 @@
             <button class="btn btn-primary btn-sm" type="button"><i class="fa fa-refresh"></i></button>
           </div> -->
         </div>
-        <div class="table-responsive mailbox-messages">
+        <div class="table-responsive mailbox-messages"  ng-show="navmailbox=='inbox'">
           <table id="example1" datatable="ng" class="table table-hover">
             <thead>
               <tr>
                 <th>
-                  <div class="animated-checkbox">
+                  <!-- <div class="animated-checkbox">
                     <label>
                       <input type="checkbox"><span class="label-text"></span>
                     </label>
-                  </div>
+                  </div> -->
+                  No
+                </th>
+                <th>Pengirim</th>
+                <th>Perihal</th>
+                <th>Berkas</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in datas.suratmasuk | filter: {'tipe':'Penerima'}">
+                <td>
+                  <!-- <div class="animated-checkbox">
+                    <label>
+                      <input type="checkbox"><span class="label-text"> </span>
+                    </label>
+                  </div> -->
+                  {{$index+1}}
+                </td>
+                <td>{{item.nm_struktural}}</td>
+                <td>{{item.perihal}}</td>
+                <td class="text-center"><a href="{{url}}/assets/berkas/{{item.berkas}}" target="_blank"><i class="fa fa-paperclip"></i></a></td>
+                <td>{{item.tanggal}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-responsive mailbox-messages"  ng-show="navmailbox=='tembusan'">
+          <table id="example1" datatable="ng" class="table table-hover">
+            <thead>
+              <tr>
+                <th>
+                  <!-- <div class="animated-checkbox">
+                    <label>
+                      <input type="checkbox"><span class="label-text"></span>
+                    </label>
+                  </div> -->
+                  No
+                </th>
+                <th>Pengirim</th>
+                <th>Perihal</th>
+                <th>Berkas</th>
+                <th>Tanggal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in datas.suratmasuk | filter: {'tipe':'Tembusan'}">
+                <td>
+                  <!-- <div class="animated-checkbox">
+                    <label>
+                      <input type="checkbox"><span class="label-text"> </span>
+                    </label>
+                  </div> -->
+                  {{$index+1}}
+                </td>
+                <td>{{item.nm_struktural}}</td>
+                <td>{{item.perihal}}</td>
+                <td class="text-center"><a href="{{url}}/assets/berkas/{{item.berkas}}" target="_blank"><i class="fa fa-paperclip"></i></a></td>
+                <td>{{item.tanggal}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-responsive mailbox-messages"  ng-show="navmailbox=='send'">
+          <table id="example1" datatable="ng" class="table table-hover">
+            <thead>
+              <tr>
+                <th>
+                  No
                 </th>
                 <th>Penerima</th>
                 <th>Perihal</th>
@@ -48,15 +118,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="item in datas.suratkeluar | filter: tipe:'Penerima'">
+              <tr ng-repeat="item in datas.suratkeluar | filter: {'tipe':'Penerima'}">
                 <td>
-                  <div class="animated-checkbox">
-                    <label>
-                      <input type="checkbox"><span class="label-text"> </span>
-                    </label>
-                  </div>
+                  {{$index+1}}
                 </td>
-                <td>{{item.namapenerima}}</td>
+                <td>{{item.nm_struktural==null ? item.namapenerima: item.nm_struktural}}</td>
                 <td>{{item.perihal}}</td>
                 <td class="text-center"><a href="{{url}}/assets/berkas/{{item.berkas}}" target="_blank"><i class="fa fa-paperclip"></i></a></td>
                 <td>{{item.tanggal}}</td>
@@ -84,10 +150,30 @@
           <div class="col-md-12"  style="height: 750px; overflow-y:auto">
             <form class="form-horizontal" ng-submit="simpan()">
               <div class="form-group row">
-                <label class="control-label col-md-3">Penerima</label>
+                <label class="control-label col-md-3">Jenis</label>
                 <div class="col-md-8">
-                  <select class="form-control select22" ng-options="item as item.nm_struktural for item in penerimas"
+                  <select class="form-control justselect" ng-options="item as item for item in jenis"
+                    ng-model="itemjenis" ng-change="selectjenis(itemjenis); show = true">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row" ng-show="show">
+                <label class="control-label col-md-3">Penerima</label>
+                <div class="col-md-8" ng-show="itemjenis==='Pegawai'">
+                  <select class="form-control select22" multiple="multiple"  ng-options="item as item.nm_struktural for item in penerimas"
                     ng-model="penerima" ng-change="selectpenerima(penerima)">
+                    <option></option>
+                  </select>
+                </div>
+                <div class="col-md-8" ng-show="itemjenis==='Mahasiswa'">
+                  <select class="form-control select22"  multiple="multiple" ng-options="item as item.nmmhs for item in penerimas"
+                    ng-model="penerima" ng-change="selectpenerima(penerima)">
+                    <option></option>
+                  </select>
+                </div>
+                <div class="col-md-8" ng-show="itemjenis==='Eksternal'">
+                  <select class="form-control select22" ng-options="item as item.nmmhs for item in eksternals"
+                    ng-model="eksternal" ng-change="selectpenerima(eksternal)">
                     <option></option>
                   </select>
                 </div>

@@ -1,5 +1,5 @@
 angular
-	.module('admin.app', [ 'admin.services', 'admin.controller', 'helper.service', 'datatables', 'rt.select2' ])
+	.module('admin.app', [ 'admin.services', 'auth.services', 'admin.controller', 'helper.service', 'datatables', 'rt.select2' ])
 	.directive('fileModel', function($parse) {
 		return {
 			restrict: 'A',

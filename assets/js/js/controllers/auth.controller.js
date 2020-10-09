@@ -15,7 +15,7 @@
 				} else {
 					var data = x.role.find((role) => role.nm_struktural == 'Admin');
 					if (data) window.location.href = helperServices.url + '/admin/dashboard';
-					else window.location.href = helperServices.url + '/user/dashboard';
+					else window.location.href = helperServices.url + '/dashboard';
 				}
 			});
 		};

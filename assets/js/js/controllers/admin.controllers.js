@@ -15,7 +15,9 @@
 		.controller('PejabatController', PejabatController)
 		.controller('SuratController', SuratController);
 
-	function AdminController($scope, helperServices) {
+	function AdminController($scope, helperServices, AuthService) {
+		$scope.adminakses = false;
+		$scope.session = {};
 		$scope.url = helperServices.url;
 		$scope.main = $scope.url + '/assets/js/main.js';
 		$('.bs-component [data-toggle="tooltip"]').tooltip();
@@ -28,6 +30,11 @@
 		$scope.title = 'Sistem Surat';
 		$scope.active = 'Home';
 		$scope.dashboard = 'Dashboard';
+		AuthService.get().then(x=>{
+			$scope.session = x;
+			$scope.photo = x.photo? 'https://restsimak.stimiksepnop.ac.id/assets/file/photo/' + x.photo: $scope.url + '/assets/img/avatar.png';
+			$scope.adminakses = x.nm_struktural=='Admin' ? true: false;
+		})
 		$scope.header = helperServices.url + '/assets/template/header.php';
 		$scope.menu = helperServices.url + '/assets/template/menu.php';
 		$scope.$on('Title', function(evt, data) {
@@ -35,12 +42,34 @@
 			$scope.dashboard = data.title;
 			$scope.active = data.active;
 		});
+		$scope.detailpegawai=()=>{
+			window.location.href = $scope.url + "/admin/pegawai/detail/" + $scope.session.idpegawai;
+		}
+		$scope.logout =()=>{
+			window.location.href = $scope.url + '/auth/logout';
+		}
 	}
 
-	function HomeController($scope) {
+	function HomeController($scope, PegawaiService, helperServices) {
 		$scope.title = { title: 'Dashboard', active: 'Home' };
 		$scope.$emit('Title', $scope.title);
-		$.LoadingOverlay('hide');
+		PegawaiService.checkidtelegram().then(x=>{
+			if(!x.chatid){
+				swal({
+					title: 'Information',
+					text: 'Chat id telegram anda kosong, mohon mengisi chat id anda',
+					icon: 'info',
+					// buttons: true,
+					// dangerMode: false
+				}).then((willDelete) => {
+					if (willDelete) {
+						document.location.href= helperServices.url+"/admin/pegawai/detail/" + x.idpegawai;
+					}
+				});
+				
+			}
+			$.LoadingOverlay('hide');
+		})
 	}
 
 	function StrukturController($scope, StrukturService) {
@@ -56,7 +85,7 @@
 			swal({
 				title: 'Confirm!!',
 				text: 'Anda yakin akan melanjutkan proses?',
-				icon: 'warning',
+				icon: 'info',
 				buttons: true,
 				dangerMode: true
 			}).then((willDelete) => {
@@ -275,7 +304,7 @@
 		$scope.detail;
 		$scope.model = {};
 		$scope.photo = helperServices.url + '/assets/img/avatar.png';
-		$scope.title = { title: 'Detail Mahasiswa', active: 'Detail Mahasiswa' };
+		$scope.title = { title: 'Detail Pegawai', active: 'Detail Pegawai' };
 		$scope.$emit('Title', $scope.title);
 		PegawaiService.getone().then((x) => {
 			$scope.datas = x;
@@ -286,6 +315,13 @@
 		$scope.back = () => {
 			$window.history.back();
 		};
+		$scope.updatetelegram = (item)=>{
+			PegawaiService.updatetelegram(item).then(x=>{
+				swal('Success', {
+					icon: 'success'
+				});
+			})
+		}
 	}
 
 	function PejabatController($scope, PejabatService, $window, StrukturService, PegawaiService) {
@@ -363,17 +399,21 @@
 
 	function SuratController($scope, SuratService, helperServices) {
 		$scope.url = helperServices.url;
+		$scope.jenis = helperServices.jenis;
 		$scope.datas = [];
 		$scope.model = {};
 		$scope.penerima = {};
 		$scope.penerimas = [];
 		$scope.tembusans = [];
 		$scope.tembusan = [];
+		$scope.show=false;
 		$scope.title = { title: 'Kotak Surat', active: 'Kotak Surat' };
 		$scope.$emit('Title', $scope.title);
+		$scope.itemjenis;
+		$scope.navmailbox = 'inbox';
 		SuratService.get().then((x) => {
 			$scope.datas = x;
-			$scope.penerimas = angular.copy($scope.datas.pegawai);
+			// $scope.penerimas = angular.copy($scope.datas.pegawai);
 			$.LoadingOverlay('hide');
 		});
 		$scope.selectpenerima = (item) => {
@@ -381,19 +421,28 @@
 			$scope.tembusans = angular.copy($scope.datas.pegawai);
 			$scope.tembusan = [];
 			var data = $scope.tembusans.find((x) => x.idpengguna == item.idpengguna);
-			var index = $scope.tembusans.indexOf(data);
-			$scope.tembusans.splice(index, 1);
-			console.log($scope.tembusans);
+			if(data){
+				var index = $scope.tembusans.indexOf(data);
+				$scope.tembusans.splice(index, 1);
+				console.log($scope.tembusans);
+			}
 		};
 		$scope.selecttembusan = (item) => {
 			console.log(item);
 		};
 		$scope.simpan = () => {
+			$.LoadingOverlay('show', {
+				background: 'rgba(0, 0, 0, 0.85)',
+				image: $scope.url + '/assets/img/preloader.gif',
+				imageResizeFactor: 2,
+				imageAnimation: 'none'
+			});
 			var fd = new FormData();
 			if ($scope.myFile) {
 				var file = $scope.myFile;
 				fd.append('file', file[0]);
 			}
+			$scope.model.penerima = $scope.penerima;
 			$scope.model.tembusan = $scope.tembusan;
 			SuratService.upload(fd).then((file) => {
 				$scope.model.berkas = file.file;
@@ -405,10 +454,24 @@
 					$scope.tembusans = [];
 					$scope.tembusan = [];
 					console.log(x);
+					$.LoadingOverlay('hide');
 					$('.asidebox').css('height', 0);
 					$('.asidebox').css('width', 0);
+					swal('Information!', "Proses berhasil", 'success');
 				});
 			});
 		};
+		$scope.selectjenis = (item)=>{
+			if(item == 'Pegawai'){
+				$scope.penerimas = angular.copy($scope.datas.pegawai);
+			}else if(item == 'Mahasiswa'){
+				$scope.penerimas = angular.copy($scope.datas.mahasiswa);
+			}else{
+				$scope.penerimas = angular.copy($scope.datas.eksternal);
+			}
+		}
+		$scope.setnav=(item)=>{
+			$scope.navmailbox = item;
+		}
 	}
 })();
