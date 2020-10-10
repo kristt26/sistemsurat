@@ -16,6 +16,8 @@
 		.controller('SuratController', SuratController);
 
 	function AdminController($scope, helperServices, AuthService) {
+		$scope.header = helperServices.url + '/assets/template/header.php';
+		$scope.menu = helperServices.url + '/assets/template/menu.php';
 		$scope.adminakses = false;
 		$scope.session = {};
 		$scope.url = helperServices.url;
@@ -35,8 +37,7 @@
 			$scope.photo = x.photo ? 'https://restsimak.stimiksepnop.ac.id/assets/file/photo/' + x.photo : $scope.url + '/assets/img/avatar.png';
 			$scope.adminakses = x.nm_struktural == 'Admin' ? true : false;
 		})
-		$scope.header = helperServices.url + '/assets/template/header.php';
-		$scope.menu = helperServices.url + '/assets/template/menu.php';
+		
 		$scope.$on('Title', function (evt, data) {
 			$scope.title += ' | ' + data.title;
 			$scope.dashboard = data.title;
