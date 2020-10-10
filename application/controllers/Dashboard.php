@@ -10,11 +10,18 @@ class Dashboard extends CI_Controller
     {
         parent::__construct();
         $this->auth->is_logged_in();
+        $this->load->model('Home_model');
+        
     }
 
     public function index()
     {
         $data['_view'] = 'dashboard';
         $this->load->view('layouts/main', $data);
+    }
+    public function getdata()
+    {
+        $data = $this->Home_model->datagrafik();
+        echo json_encode($data);
     }
 }

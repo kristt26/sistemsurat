@@ -12,7 +12,36 @@
 		.factory('PejabatService', PejabatService)
 		.factory('SuratService', SuratService);
 
-	function HomeService() {}
+	function HomeService($http, $q, helperServices) {
+		var url = helperServices.url + '/dashboard/';
+		var service = { Items: [] };
+		service.get = function() {
+			var def = $q.defer();
+			if (service.instance) {
+				def.resolve(service.Items);
+			} else {
+				$http({
+					method: 'Get',
+					url: url + 'getdata',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(
+					(response) => {
+						service.instance = true;
+						service.Items = response.data;
+						def.resolve(service.Items);
+					},
+					(err) => {
+						swal('Information!', err.data, 'error');
+						def.reject(err);
+					}
+				);
+			}
+			return def.promise;
+		};
+		return service;
+	}
 
 	function StrukturService($http, $q, helperServices) {
 		var url = helperServices.url + '/admin/struktural/';

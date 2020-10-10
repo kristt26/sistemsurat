@@ -44,7 +44,7 @@
     <ul class="app-menu">
         <li><a ng-class="{'app-menu__item active': active === 'Home', 'app-menu__item':active !== 'Home' }"
         href="{{url}}/admin/dashboard"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Home</span></a></li>
-        <li ng-class="{'treeview is-expanded': active === 'Struktural' || active === 'Kriteria' || active === 'Mahasiswa' || active === 'Detail Mahasiswa' || active === 'Pegawai' || active === 'Detail Pegawai',
+        <li ng-if="adminakses" ng-class="{'treeview is-expanded': active === 'Struktural' || active === 'Kriteria' || active === 'Mahasiswa' || active === 'Detail Mahasiswa' || active === 'Pegawai' || active === 'Detail Pegawai',
             'treeview': active !== 'Struktural' || active !== 'Kriteria' || active !== 'Mahasiswa' || active !== 'Detail Mahasiswa' || active !== 'Pegawai' || active !== 'Detail Pegawai'}">
             <a class="app-menu__item" href="" data-toggle="treeview"><i class="app-menu__icon fa fa-file-text"></i><span class="app-menu__label">Manajemen Data</span><i class="treeview-indicator fa fa-angle-right"></i></a>
             <ul class="treeview-menu">

@@ -12,11 +12,12 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
   <link rel="stylesheet" type="text/css"
     href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+  <link href="<?=site_url('assets/plugins/highchats/highchats.css');?>" rel='stylesheet'>
 
   <link rel="stylesheet"
     href="<?=base_url();?>assets/js/plugins/angular-datatables/dist/css/angular-datatables.min.css">
   <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
 
 </head>
 
@@ -70,6 +71,10 @@ if (isset($_view) && $_view) {
   <script src="<?=site_url('assets/js/bower_components/select2/select2_locale_id.js');?>"></script> -->
   <script src="<?=site_url('assets/js/bower_components/angular-select2/dist/angular-select2.min.js');?>"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <!-- Page specific javascripts-->
   <!-- Google analytics script-->
   <script type="text/javascript">
