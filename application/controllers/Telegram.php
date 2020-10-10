@@ -23,7 +23,7 @@ class Telegram extends CI_Controller
 
         $data = array(
             'chat_id' => $chatID,
-            'text' => $message === "getId" || $message === "getid" ? "Id Chat Anda: " . $chatID : "Perintah yang anda masukkan salah",
+            'text' => $message === "getId" || $message === "getid" ? "Id Chat Anda: " . $chatID : "Perintah yang anda masukkan salah gunakan perintah 'getId' atau 'getId' untuk mendapatkan idchat anda",
             'reply_to_message_id' => $msgid,
 
         );
